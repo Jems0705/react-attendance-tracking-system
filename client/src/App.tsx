@@ -12,6 +12,9 @@ const DashboardPage = lazy(() => import("@/pages/Dashboard"));
 const ClassesPage = lazy(() => import("@/pages/Classes"));
 const StudentsPage = lazy(() => import("@/pages/Students"));
 const AttendancePage = lazy(() => import("@/pages/Attendance"));
+const ScanPage = lazy(() => import("@/pages/Scan"));
+const ClockInPage = lazy(() => import("@/pages/ClockIn"));
+const ClockOutPage = lazy(() => import("@/pages/ClockOut"));
 const ProfilePage = lazy(() => import("@/pages/Profile"));
 const SettingsPage = lazy(() => import("@/pages/Settings"));
 
@@ -70,7 +73,40 @@ const router = createBrowserRouter([
                                 <AttendancePage />
                             </Suspense>
                         ),
+                        children: [
+                            {
+                                path: "scan",
+                                element: (
+                                    <Suspense fallback={<>Loading...</>}>
+                                        <ScanPage />
+                                    </Suspense>
+                                ),
+                                children: [
+                                    {
+                                        path: "clock-in",
+                                        element: (
+                                            <Suspense
+                                                fallback={<>Loading...</>}
+                                            >
+                                                <ClockInPage />
+                                            </Suspense>
+                                        ),
+                                    },
+                                    {
+                                        path: "clock-out",
+                                        element: (
+                                            <Suspense
+                                                fallback={<>Loading...</>}
+                                            >
+                                                <ClockOutPage />
+                                            </Suspense>
+                                        ),
+                                    },
+                                ],
+                            },
+                        ],
                     },
+
                     {
                         path: "/profile",
                         element: (

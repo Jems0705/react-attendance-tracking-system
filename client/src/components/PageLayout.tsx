@@ -29,14 +29,7 @@ import {
 } from "./ui/tooltip";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "./ui/breadcrumb";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -46,6 +39,7 @@ import {
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
+import { CustomBreadcrumb } from "./CustomBreadcrumb";
 
 export const PageLayout = () => {
     return (
@@ -206,25 +200,7 @@ export const PageLayout = () => {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    {/* <Breadcrumb className="hidden md:flex">
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to="#">Dashboard</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to="#">Orders</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Recent Orders</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb> */}
+                    <CustomBreadcrumb />
                     <div className="relative ml-auto flex-1 md:grow-0">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                         <Input
@@ -241,7 +217,7 @@ export const PageLayout = () => {
                                 className="overflow-hidden rounded-full"
                             >
                                 <img
-                                    src="/placeholder-user.jpg"
+                                    src="https://images.unsplash.com/photo-1712847331906-fac48177f9f7?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                     width={36}
                                     height={36}
                                     alt="Avatar"
@@ -252,6 +228,9 @@ export const PageLayout = () => {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <Link to="/profile">Profile</Link>
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -260,7 +239,11 @@ export const PageLayout = () => {
                     </DropdownMenu>
                 </header>
 
-                <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+                {/* <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+                    <Outlet />
+                </main> */}
+
+                <main className="flex-1 items-start p-4 sm:px-6 sm:py-0">
                     <Outlet />
                 </main>
             </div>
