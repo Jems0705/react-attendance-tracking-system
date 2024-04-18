@@ -1,0 +1,17 @@
+{
+    "name": "react-attendance-tracking-system",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "node server/index.js",
+        "server": "npm run dev --prefix server",
+        "client": "npm run dev --prefix client",
+        "dev": "concurrently \"npm run server\" \"npm run client\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}
