@@ -5,12 +5,13 @@ export default function Scan() {
     return (
         <div className="flex flex-col">
             <div className="flex gap-1">
-                <Button>
-                    <Link to="/attendance/scan/clock-in">Clock In</Link>
-                </Button>
-                <Button>
-                    <Link to="/attendance/scan/clock-out">Clock Out</Link>
-                </Button>
+                <Link to="/attendance/scan/clock-in">
+                    <Button>Clock In</Button>
+                </Link>
+
+                <Link to="/attendance/scan/clock-out">
+                    <Button>Clock Out</Button>
+                </Link>
             </div>
             <section>
                 <Outlet />

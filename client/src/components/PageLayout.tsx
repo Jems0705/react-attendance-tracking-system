@@ -140,7 +140,7 @@ export const PageLayout = () => {
                     </TooltipProvider>
                 </nav>
             </aside>
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <div className="flex flex-1 flex-col sm:gap-4 sm:py-4 sm:pl-14">
                 <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
                     <Sheet>
                         <SheetTrigger asChild>
@@ -228,9 +228,11 @@ export const PageLayout = () => {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <Link to="/profile">Profile</Link>
-                            </DropdownMenuItem>
+
+                            <Link to="/profile">
+                                <DropdownMenuItem> Profile</DropdownMenuItem>
+                            </Link>
+
                             <DropdownMenuItem>Settings</DropdownMenuItem>
                             <DropdownMenuItem>Support</DropdownMenuItem>
                             <DropdownMenuSeparator />

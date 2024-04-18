@@ -10,6 +10,7 @@ const RegisterPage = lazy(() => import("@/pages/Register"));
 
 const DashboardPage = lazy(() => import("@/pages/Dashboard"));
 const ClassesPage = lazy(() => import("@/pages/Classes"));
+const NewClassPage = lazy(() => import("@/pages/NewClass"));
 const StudentsPage = lazy(() => import("@/pages/Students"));
 const AttendancePage = lazy(() => import("@/pages/Attendance"));
 const ScanPage = lazy(() => import("@/pages/Scan"));
@@ -57,6 +58,16 @@ const router = createBrowserRouter([
                                 <ClassesPage />
                             </Suspense>
                         ),
+                        children: [
+                            {
+                                path: "new",
+                                element: (
+                                    <Suspense fallback={<>Loading...</>}>
+                                        <NewClassPage />
+                                    </Suspense>
+                                ),
+                            },
+                        ],
                     },
                     {
                         path: "/students",
