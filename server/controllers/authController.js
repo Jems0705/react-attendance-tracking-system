@@ -9,17 +9,17 @@ const authLogin = async (req, res, next) => {
         const { email, password } = req.body;
 
         const foundUser = await User.findOne({
-            $or: [{ email: email }, { prn: email }],
+            $or: [{ email: email }, { lrn: email }],
         });
 
         if (!foundUser) {
             res.status(401);
-            throw new Error("Invalid email or password.");
+            throw new Error("Invalid email/lrn or password.");
         }
 
         if (!(await foundUser.matchPassword(password))) {
             res.status(401);
-            throw new Error("Invalid email or password.");
+            throw new Error("Invalid email/lrn or password.");
         }
 
         const { accessToken } = generateToken({
@@ -37,19 +37,22 @@ const authLogin = async (req, res, next) => {
 // @access  public
 const authSignUp = async (req, res, next) => {
     try {
-        const { email, prn } = req.body;
+        const { email } = req.body;
 
         const emailExists = await User.findOne({ email });
-        const prnExists = await User.findOne({ prn });
 
         if (emailExists) {
             res.status(400);
             throw new Error("Email already exists.");
         }
 
-        if (prnExists) {
-            res.status(400);
-            throw new Error("PRN already exists.");
+        if (req.body?.lrn) {
+            const lrnExists = await User.findOne({ lrn: req.body.lrn });
+
+            if (lrnExists) {
+                res.status(400);
+                throw new Error("LRN already exists.");
+            }
         }
 
         const user = await User.create({ ...req.body });
