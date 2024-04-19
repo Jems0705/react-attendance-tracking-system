@@ -5,7 +5,7 @@ export type Teacher = {
     _id: string;
     email: string;
     name: string;
-    prn: string;
+    lrn: string;
     role: string;
     createdAt: Date;
     updatedAt: Date;

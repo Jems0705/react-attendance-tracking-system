@@ -1,6 +1,6 @@
 import { ClassFormSchemaType, classFormSchema } from "@/schema/classFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm, useFormContext } from "react-hook-form";
 import {
     Form,
     FormControl,
@@ -30,63 +30,42 @@ import { useNavigate } from "react-router-dom";
 import { useGetTeachers } from "@/hooks/teacher/useGetTeachers";
 import { useGetStudents } from "@/hooks/student/useGetStudents";
 
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Stack, TextField, Typography } from "@mui/material";
 import { DevTool } from "@hookform/devtools";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useGetAuth } from "@/hooks/auth/useGetAuth";
 
 export const ClassForm = () => {
-    const queryClient = useQueryClient();
-    const navigate = useNavigate();
+    const { setValue, control } = useFormContext();
 
-    const { mutate: createClass } = useCreateClass();
-
+    const { data: authUser } = useGetAuth();
     const { data: teachers } = useGetTeachers();
     const { data: students } = useGetStudents();
 
-    const form = useForm<ClassFormSchemaType>({
-        defaultValues: {
-            name: "",
-            teacher: "",
-            students: [],
-        },
-        resolver: zodResolver(classFormSchema),
-    });
-
-    const onSubmit = (values: ClassFormSchemaType) => {
-        createClass(values, {
-            onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["classes"] });
-
-                navigate("/classes");
-            },
-        });
-    };
-
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="Section A - Subject"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+        <Stack>
+            <Controller
+                control={control}
+                name="name"
+                render={({ field }) => (
+                    <Stack>
+                        <Typography>Name</Typography>
+                        <TextField
+                            placeholder="Section A - Subject"
+                            {...field}
+                        />
+                    </Stack>
+                )}
+            />
 
-                <FormField
-                    control={form.control}
+            {authUser?.role === "admin" && (
+                <Controller
+                    control={control}
                     name="teacher"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>Teacher</FormLabel>
+                        <Stack className="flex flex-col">
+                            <Typography>Teacher</Typography>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -125,7 +104,7 @@ export const ClassForm = () => {
                                                             value={teacher._id}
                                                             key={teacher._id}
                                                             onSelect={() => {
-                                                                form.setValue(
+                                                                setValue(
                                                                     "teacher",
                                                                     teacher._id
                                                                 );
@@ -149,13 +128,13 @@ export const ClassForm = () => {
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-                            <FormMessage />
-                        </FormItem>
+                        </Stack>
                     )}
                 />
+            )}
 
-                {/* <FormField
-                    control={form.control}
+            {/* <Controller
+                    control={control}
                     name="students"
                     render={({ field }) => {
                         return (
@@ -178,62 +157,53 @@ export const ClassForm = () => {
                     }}
                 /> */}
 
-                <FormField
-                    control={form.control}
-                    name="students"
-                    render={({ field }) => {
-                        return (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>Students</FormLabel>
-                                <Autocomplete
-                                    {...field}
-                                    multiple
-                                    options={
-                                        students
-                                            ? students
-                                                  .map((student) => student._id)
-                                                  .filter(
-                                                      (student) =>
-                                                          !field.value.includes(
-                                                              student
-                                                          )
-                                                  )
-                                            : []
-                                    }
-                                    getOptionLabel={(option) => {
-                                        const optionLabel =
-                                            students &&
-                                            students.find(
-                                                (student) =>
-                                                    student._id === option
-                                            );
+            <Controller
+                control={control}
+                name="students"
+                render={({ field }) => {
+                    return (
+                        <Stack className="flex flex-col">
+                            <Typography>Students</Typography>
+                            <Autocomplete
+                                {...field}
+                                multiple
+                                options={
+                                    students
+                                        ? students
+                                              .map((student) => student._id)
+                                              .filter(
+                                                  (student) =>
+                                                      !field.value.includes(
+                                                          student
+                                                      )
+                                              )
+                                        : []
+                                }
+                                getOptionLabel={(option) => {
+                                    const optionLabel =
+                                        students &&
+                                        students.find(
+                                            (student) => student._id === option
+                                        );
 
-                                        if (!optionLabel) return "Loading...";
+                                    if (!optionLabel) return "Loading...";
 
-                                        return optionLabel.name;
-                                    }}
-                                    isOptionEqualToValue={(option, value) => {
-                                        return option == value;
-                                    }}
-                                    onChange={(_event, values) => {
-                                        field.onChange(values);
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="filled"
-                                        />
-                                    )}
-                                />
-                                <FormMessage />
-                            </FormItem>
-                        );
-                    }}
-                />
-
-                <Button type="submit">Submit</Button>
-            </form>
-            <DevTool control={form.control} />
-        </Form>
+                                    return optionLabel.name;
+                                }}
+                                isOptionEqualToValue={(option, value) => {
+                                    return option == value;
+                                }}
+                                onChange={(_event, values) => {
+                                    field.onChange(values);
+                                }}
+                                renderInput={(params) => (
+                                    <TextField {...params} variant="filled" />
+                                )}
+                            />
+                        </Stack>
+                    );
+                }}
+            />
+        </Stack>
     );
 };

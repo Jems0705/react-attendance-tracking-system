@@ -1,15 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
 import useAxiosPrivate from "../useAxiosPrivate";
 
-export const useCreateClass = () => {
+export const useUpdateClass = () => {
     const axios = useAxiosPrivate();
 
     return useMutation({
         mutationKey: ["classes"],
         mutationFn: async (data: any) => {
-            const res = await axios.post("/classes", data);
+            const { classId, ...rest } = data;
+            const res = await axios.put(`/classes/${classId}`, rest);
 
-            if (res.status === 201) return res.data;
+            if (res.status === 200) return res.data;
         },
     });
 };

@@ -1,3 +1,4 @@
+import { ClassCreate } from "@/components/classes/ClassCreate";
 import { ClassForm } from "@/components/classes/ClassForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -15,7 +16,7 @@ export default function NewClass() {
             </div>
 
             <div className="p-10 rounded-md">
-                <ClassForm />
+                <ClassCreate />
             </div>
         </section>
     );

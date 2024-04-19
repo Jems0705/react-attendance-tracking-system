@@ -1,15 +1,21 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "./components/theme-provider";
+import { Toaster } from "react-hot-toast";
 import { Suspense, lazy } from "react";
-import { AuthContextProvider } from "./contexts/auth/AuthProvider";
 import { ProtectedRoute } from "./hooks/auth/ProtectedRoute";
 import { PageLayout } from "./components/PageLayout";
+import ThemeProvider from "./themes/ThemeProvider";
+import { SidebarProvider } from "./contexts/SidebarProvider";
+import { FullLoader } from "./components/shared/FullLoader";
+import { AllowedRoles } from "./components/auth/AllowedRoles";
+import roles from "./data/roles";
 
 const LoginPage = lazy(() => import("@/pages/Login"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
 
 const DashboardPage = lazy(() => import("@/pages/Dashboard"));
 const ClassesPage = lazy(() => import("@/pages/Classes"));
+const ClassPage = lazy(() => import("@/pages/Class"));
+const ClassEditPage = lazy(() => import("@/pages/ClassEdit"));
 const NewClassPage = lazy(() => import("@/pages/NewClass"));
 const StudentsPage = lazy(() => import("@/pages/Students"));
 const AttendancePage = lazy(() => import("@/pages/Attendance"));
@@ -19,13 +25,11 @@ const ClockOutPage = lazy(() => import("@/pages/ClockOut"));
 const ProfilePage = lazy(() => import("@/pages/Profile"));
 const SettingsPage = lazy(() => import("@/pages/Settings"));
 
-import "semantic-ui-css/semantic.min.css";
-
 const router = createBrowserRouter([
     {
         path: "/login",
         element: (
-            <Suspense fallback={<>Loading...</>}>
+            <Suspense fallback={<FullLoader />}>
                 <LoginPage />
             </Suspense>
         ),
@@ -33,7 +37,7 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: (
-            <Suspense fallback={<>Loading...</>}>
+            <Suspense fallback={<FullLoader />}>
                 <RegisterPage />
             </Suspense>
         ),
@@ -43,12 +47,24 @@ const router = createBrowserRouter([
         element: <ProtectedRoute />,
         children: [
             {
-                element: <PageLayout />,
+                element: (
+                    <SidebarProvider>
+                        <PageLayout />
+                    </SidebarProvider>
+                ),
                 children: [
                     {
                         index: true,
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
+                            <Suspense fallback={<FullLoader />}>
+                                <DashboardPage />
+                            </Suspense>
+                        ),
+                    },
+                    {
+                        path: "dashboard",
+                        element: (
+                            <Suspense fallback={<FullLoader />}>
                                 <DashboardPage />
                             </Suspense>
                         ),
@@ -56,16 +72,48 @@ const router = createBrowserRouter([
                     {
                         path: "/classes",
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
-                                <ClassesPage />
+                            <Suspense fallback={<FullLoader />}>
+                                {/* also add admin if available */}
+                                <AllowedRoles
+                                    type="page"
+                                    roles={[roles.TEACHER]}
+                                >
+                                    <ClassesPage />
+                                </AllowedRoles>
                             </Suspense>
                         ),
                         children: [
                             {
                                 path: "new",
                                 element: (
-                                    <Suspense fallback={<>Loading...</>}>
-                                        <NewClassPage />
+                                    <Suspense fallback={<FullLoader />}>
+                                        <AllowedRoles
+                                            type="page"
+                                            roles={[roles.TEACHER]}
+                                        >
+                                            <NewClassPage />
+                                        </AllowedRoles>
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ":classId",
+                                element: (
+                                    <Suspense fallback={<FullLoader />}>
+                                        <ClassPage />
+                                    </Suspense>
+                                ),
+                            },
+                            {
+                                path: ":classId/edit",
+                                element: (
+                                    <Suspense fallback={<FullLoader />}>
+                                        <AllowedRoles
+                                            type="page"
+                                            roles={[roles.TEACHER]}
+                                        >
+                                            <ClassEditPage />
+                                        </AllowedRoles>
                                     </Suspense>
                                 ),
                             },
@@ -74,44 +122,65 @@ const router = createBrowserRouter([
                     {
                         path: "/students",
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
-                                <StudentsPage />
+                            <Suspense fallback={<FullLoader />}>
+                                <AllowedRoles
+                                    type="page"
+                                    roles={[roles.TEACHER]}
+                                >
+                                    <StudentsPage />
+                                </AllowedRoles>
                             </Suspense>
                         ),
                     },
                     {
                         path: "/attendance",
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
-                                <AttendancePage />
+                            <Suspense fallback={<FullLoader />}>
+                                <AllowedRoles
+                                    type="page"
+                                    roles={[roles.TEACHER]}
+                                >
+                                    <AttendancePage />/
+                                </AllowedRoles>
                             </Suspense>
                         ),
                         children: [
                             {
                                 path: "scan",
                                 element: (
-                                    <Suspense fallback={<>Loading...</>}>
-                                        <ScanPage />
+                                    <Suspense fallback={<FullLoader />}>
+                                        <AllowedRoles
+                                            type="page"
+                                            roles={[roles.TEACHER]}
+                                        >
+                                            <ScanPage />
+                                        </AllowedRoles>
                                     </Suspense>
                                 ),
                                 children: [
                                     {
                                         path: "clock-in",
                                         element: (
-                                            <Suspense
-                                                fallback={<>Loading...</>}
-                                            >
-                                                <ClockInPage />
+                                            <Suspense fallback={<FullLoader />}>
+                                                <AllowedRoles
+                                                    type="page"
+                                                    roles={[roles.TEACHER]}
+                                                >
+                                                    <ClockInPage />
+                                                </AllowedRoles>
                                             </Suspense>
                                         ),
                                     },
                                     {
                                         path: "clock-out",
                                         element: (
-                                            <Suspense
-                                                fallback={<>Loading...</>}
-                                            >
-                                                <ClockOutPage />
+                                            <Suspense fallback={<FullLoader />}>
+                                                <AllowedRoles
+                                                    type="page"
+                                                    roles={[roles.TEACHER]}
+                                                >
+                                                    <ClockOutPage />
+                                                </AllowedRoles>
                                             </Suspense>
                                         ),
                                     },
@@ -123,7 +192,7 @@ const router = createBrowserRouter([
                     {
                         path: "/profile",
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
+                            <Suspense fallback={<FullLoader />}>
                                 <ProfilePage />
                             </Suspense>
                         ),
@@ -131,7 +200,7 @@ const router = createBrowserRouter([
                     {
                         path: "/settings",
                         element: (
-                            <Suspense fallback={<>Loading...</>}>
+                            <Suspense fallback={<FullLoader />}>
                                 <SettingsPage />
                             </Suspense>
                         ),
@@ -144,8 +213,9 @@ const router = createBrowserRouter([
 
 function App() {
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <ThemeProvider>
             <RouterProvider router={router} />
+            <Toaster />
         </ThemeProvider>
     );
 }

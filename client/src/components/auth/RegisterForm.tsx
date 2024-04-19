@@ -10,35 +10,58 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { AuthFormSchemaType, authFormSchema } from "@/schema/authFormSchema";
+import {
+    AuthFormSchemaType,
+    CreateAuthFormSchema,
+    authFormSchema,
+    createAuthFormSchema,
+} from "@/schema/authFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { FC } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { FC, SyntheticEvent, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useRegister } from "@/hooks/auth/useRegister";
 
 import { DevTool } from "@hookform/devtools";
+import { Stack, Tab, Tabs, TextField } from "@mui/material";
+import toast from "react-hot-toast";
 
 export const RegisterForm: FC = () => {
+    const [value, setValue] = useState("student");
+
+    const handleChange = (event: SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+    };
+
     const navigate = useNavigate();
     const { mutate: register, isPending: isCreating } = useRegister();
 
-    const form = useForm<AuthFormSchemaType>({
-        resolver: zodResolver(authFormSchema),
+    const form = useForm<CreateAuthFormSchema>({
         defaultValues: {
             role: "student",
             firstName: "",
+            lrn: "",
             lastName: "",
             email: "",
             password: "",
             confirmPassword: "",
         },
+        resolver: zodResolver(createAuthFormSchema),
     });
 
-    const onSubmit = (values: AuthFormSchemaType) => {
-        console.log(values);
+    const role = useWatch({ name: "role", control: form.control });
 
-        register(values, { onSuccess: () => navigate("/") });
+    const onSubmit = (values: CreateAuthFormSchema) => {
+        console.log("values", values);
+
+        register(values, {
+            onSuccess: () => {
+                toast.success(`New ${role} has been created successfully.`, {
+                    duration: 5000,
+                });
+                navigate("/login");
+            },
+        });
     };
 
     return (
@@ -58,7 +81,34 @@ export const RegisterForm: FC = () => {
                                 account
                             </p>
                         </div>
+
+                        <Stack>
+                            <FormField
+                                control={form.control}
+                                name="role"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <Tabs
+                                            {...field}
+                                            onChange={(_e, value) => {
+                                                field.onChange(value);
+                                            }}
+                                        >
+                                            <Tab
+                                                label="Student"
+                                                value="student"
+                                            />
+                                            <Tab
+                                                label="Teacher"
+                                                value="teacher"
+                                            />
+                                        </Tabs>
+                                    </FormItem>
+                                )}
+                            />
+                        </Stack>
                         <div className="grid gap-4">
+                            <TextField placeholder="TEST" />
                             <FormField
                                 control={form.control}
                                 name="firstName"
@@ -95,21 +145,23 @@ export const RegisterForm: FC = () => {
                                 )}
                             />
 
-                            <FormField
-                                control={form.control}
-                                name="prn"
-                                render={({ field }) => (
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="prn">PRN</Label>
-                                        <Input
-                                            {...field}
-                                            placeholder="..."
-                                            disabled={isCreating}
-                                        />
-                                        <FormMessage />
-                                    </div>
-                                )}
-                            />
+                            {role === "student" && (
+                                <FormField
+                                    control={form.control}
+                                    name="lrn"
+                                    render={({ field }) => (
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="lrn">LRN</Label>
+                                            <Input
+                                                {...field}
+                                                placeholder="..."
+                                                disabled={isCreating}
+                                            />
+                                            <FormMessage />
+                                        </div>
+                                    )}
+                                />
+                            )}
 
                             <FormField
                                 control={form.control}
@@ -166,41 +218,6 @@ export const RegisterForm: FC = () => {
                                         />
                                         <FormMessage />
                                     </div>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="role"
-                                render={({ field }) => (
-                                    <FormItem className="space-y-3">
-                                        <FormLabel>Role</FormLabel>
-                                        <FormControl>
-                                            <RadioGroup
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                                className="flex flex-col space-y-1"
-                                            >
-                                                <FormItem className="flex items-center space-x-3 space-y-0">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="student" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">
-                                                        Student
-                                                    </FormLabel>
-                                                </FormItem>
-                                                <FormItem className="flex items-center space-x-3 space-y-0">
-                                                    <FormControl>
-                                                        <RadioGroupItem value="teacher" />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal">
-                                                        Teacher
-                                                    </FormLabel>
-                                                </FormItem>
-                                            </RadioGroup>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
                                 )}
                             />
 

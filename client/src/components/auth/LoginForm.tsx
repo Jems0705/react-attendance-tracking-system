@@ -16,13 +16,11 @@ export const LoginForm = () => {
     const { mutate: login, isPending: isLoggingIn } = useLogin();
 
     const form = useForm<AuthFormSchemaType>({
-        resolver: zodResolver(
-            authFormSchema.pick({ email: true, password: true })
-        ),
         defaultValues: {
             email: "",
             password: "",
         },
+        resolver: zodResolver(authFormSchema),
     });
 
     const onSubmit = (values: AuthFormSchemaType) => {
@@ -59,7 +57,7 @@ export const LoginForm = () => {
                                 render={({ field }) => (
                                     <div className="grid gap-2">
                                         <Label htmlFor="email">
-                                            Email or PRN
+                                            Email or LRN
                                         </Label>
                                         <Input
                                             {...field}

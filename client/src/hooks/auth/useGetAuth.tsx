@@ -1,23 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPrivate from "../useAxiosPrivate";
 
-export type Student = {
+export type AuthUser = {
     _id: string;
     email: string;
-    name: string;
-    lrn: string;
+    firstName: string;
+    lastName: string;
+    lrn?: string;
     role: string;
     createdAt: Date;
     updatedAt: Date;
 };
 
-export const useGetStudents = () => {
+export const useGetAuth = () => {
     const axios = useAxiosPrivate();
 
     return useQuery({
-        queryKey: ["students"],
+        queryKey: ["auth"],
         queryFn: async () => {
-            const res = await axios.get<Student[]>("/students");
+            const res = await axios.get<AuthUser>("/auth/me");
 
             if (res.status === 200) return res.data;
         },

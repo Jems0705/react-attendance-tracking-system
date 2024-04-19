@@ -20,6 +20,9 @@ import {
 import { useGetClasses } from "@/hooks/class/useGetClasses";
 import { useClockOut } from "@/hooks/attendance/useClockOut";
 import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Autocomplete, TextField } from "@mui/material";
 
 type AttendanceScannerProps = {
     type: "in" | "out";
@@ -28,10 +31,11 @@ type AttendanceScannerProps = {
 export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
     const queryClient = useQueryClient();
 
-    const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
 
     const { data: classes } = useGetClasses();
+
+    console.log("classes", classes);
 
     const { mutate: clockIn } = useClockIn();
     const { mutate: clockOut } = useClockOut();
@@ -45,13 +49,24 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                     { student, classId: value },
                     {
                         onSuccess: () => {
-                            setValue("");
+                            // setValue("");
                             queryClient.invalidateQueries({
                                 queryKey: ["attendance"],
                             });
+                            toast.success("Clocked " + type, {
+                                duration: 5000,
+                            });
+                        },
+                        onError: (err) => {
+                            if (axios.isAxiosError(err)) {
+                                toast.error(err.response?.data.message, {
+                                    duration: 5000,
+                                });
+                            }
+                            // setValue("");
                         },
                         onSettled: () => {
-                            setValue("");
+                            // setValue("");
                         },
                     }
                 );
@@ -62,19 +77,30 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                     { student, classId: value },
                     {
                         onSuccess: () => {
-                            setValue("");
+                            // setValue("");
                             queryClient.invalidateQueries({
                                 queryKey: ["attendance"],
                             });
+                            toast.success("Clocked " + type, {
+                                duration: 5000,
+                            });
+                        },
+                        onError: (err) => {
+                            if (axios.isAxiosError(err)) {
+                                toast.error(err.response?.data.message, {
+                                    duration: 5000,
+                                });
+                            }
+                            // setValue("");
                         },
                         onSettled: () => {
-                            setValue("");
+                            // setValue("");
                         },
                     }
                 );
             }
 
-            scanner.clear();
+            // scanner.clear();
         };
 
         const onError = () => {};
@@ -84,8 +110,8 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                 "reader",
                 {
                     qrbox: {
-                        width: 250,
-                        height: 250,
+                        width: 350,
+                        height: 350,
                     },
                     fps: 5,
                 },
@@ -104,7 +130,30 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
 
     return (
         <div className="flex flex-col gap-2 py-4">
-            <Popover open={open} onOpenChange={setOpen}>
+            <Autocomplete
+                value={value}
+                onChange={(_e, value) => {
+                    setValue(value as string);
+                }}
+                options={classes ? classes.map((_class) => _class._id) : []}
+                getOptionLabel={(option) => {
+                    const optionLabel =
+                        classes &&
+                        classes.find((_class) => _class._id === option);
+
+                    if (!optionLabel) return "";
+
+                    return optionLabel.name;
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        placeholder="Select class..."
+                    />
+                )}
+            />
+            {/* <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
@@ -153,9 +202,13 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                         </CommandList>
                     </Command>
                 </PopoverContent>
-            </Popover>
+            </Popover> */}
 
-            {value && <div id="reader">Clock In</div>}
+            {value && (
+                <div id="reader" className="w-[500px]">
+                    Clock In
+                </div>
+            )}
         </div>
     );
 };
