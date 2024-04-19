@@ -23,19 +23,51 @@ import {
     CommandList,
 } from "../ui/command";
 
+// import { Dropdown } from "semantic-ui-react";
+import { useCreateClass } from "@/hooks/class/useCreateClass";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useGetTeachers } from "@/hooks/teacher/useGetTeachers";
+import { useGetStudents } from "@/hooks/student/useGetStudents";
+
 export const ClassForm = () => {
-    const teachers = [
-        { id: "23123wdawdasdwr", name: "John Doe" },
-        { id: "gdfw412asdad", name: "Doe Nut" },
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    const { mutate: createClass } = useCreateClass();
+
+    const { data: teachers } = useGetTeachers();
+    const { data } = useGetStudents();
+
+    console.log("students", data);
+
+    const students = [
+        { value: "23123wdawdasdwrasdasd", text: "Student 1" },
+        { value: "gdfw412asdasdasdad", text: "Student 2" },
+        { value: "qweas", text: "Student 3" },
+        { value: "asddfsdf", text: "Student 4" },
+        { value: "gdfw412dasdasdasdasdad", text: "Student 5" },
     ];
 
     const form = useForm<ClassFormSchemaType>({
-        defaultValues: {},
+        defaultValues: {
+            name: "",
+            teacher: "",
+            students: [],
+        },
         resolver: zodResolver(classFormSchema),
     });
 
     const onSubmit = (values: ClassFormSchemaType) => {
-        console.log(values);
+        console.log("values", values);
+
+        createClass(values, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ["classes"] });
+
+                navigate("/classes");
+            },
+        });
     };
 
     return (
@@ -77,9 +109,9 @@ export const ClassForm = () => {
                                             )}
                                         >
                                             {field.value
-                                                ? teachers.find(
-                                                      (language) =>
-                                                          language.id ===
+                                                ? teachers?.find(
+                                                      (teacher) =>
+                                                          teacher._id ===
                                                           field.value
                                                   )?.name
                                                 : "Select teacher"}
@@ -96,22 +128,22 @@ export const ClassForm = () => {
                                                 No teacher found.
                                             </CommandEmpty>
                                             <CommandGroup>
-                                                {teachers.map((teacher) => {
+                                                {teachers?.map((teacher) => {
                                                     return (
                                                         <CommandItem
-                                                            value={teacher.id}
-                                                            key={teacher.id}
+                                                            value={teacher._id}
+                                                            key={teacher._id}
                                                             onSelect={() => {
                                                                 form.setValue(
                                                                     "teacher",
-                                                                    teacher.id
+                                                                    teacher._id
                                                                 );
                                                             }}
                                                         >
                                                             <Check
                                                                 className={cn(
                                                                     "mr-2 h-4 w-4",
-                                                                    teacher.id ===
+                                                                    teacher._id ===
                                                                         field.value
                                                                         ? "opacity-100"
                                                                         : "opacity-0"
@@ -130,6 +162,31 @@ export const ClassForm = () => {
                         </FormItem>
                     )}
                 />
+
+                {/* <FormField
+                    control={form.control}
+                    name="students"
+                    render={({ field }) => {
+                        return (
+                            <FormItem className="flex flex-col">
+                                <Dropdown
+                                    {...field}
+                                    placeholder="Students"
+                                    onChange={(_e, data) =>
+                                        field.onChange(data.value)
+                                    }
+                                    fluid
+                                    multiple
+                                    search
+                                    selection
+                                    options={students}
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        );
+                    }}
+                /> */}
+
                 <Button type="submit">Submit</Button>
             </form>
         </Form>

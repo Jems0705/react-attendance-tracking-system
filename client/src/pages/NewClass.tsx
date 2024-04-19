@@ -12,7 +12,7 @@ export default function NewClass() {
                 </Button>
             </Link>
 
-            <div className="p-10 rounded-md bg-gray-700">
+            <div className="p-10 rounded-md">
                 <ClassForm />
             </div>
         </section>

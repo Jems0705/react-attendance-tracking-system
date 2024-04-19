@@ -5,27 +5,27 @@ type AuthContextProps = {
 };
 
 type AuthContextState = {
-    accessToken: string | null;
-    setAccessToken: Dispatch<React.SetStateAction<string>>;
+    auth: string | null | undefined;
+    setAuth: Dispatch<React.SetStateAction<string>>;
 };
 
 const AuthContext = createContext<AuthContextState>({} as AuthContextState);
 
-export function AuthContextProvider({ children }: AuthContextProps) {
-    const [accessToken, setAccessToken] = useState("");
+export function AuthProvider({ children }: AuthContextProps) {
+    const [auth, setAuth] = useState("");
 
     return (
-        <AuthContext.Provider value={{ accessToken, setAccessToken }}>
+        <AuthContext.Provider value={{ auth, setAuth }}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-export const useAuthContext = () => {
+export const useAuth = () => {
     const context = useContext(AuthContext);
 
     if (context === undefined)
-        throw new Error("useAuth must be used within a ThemeProvider");
+        throw new Error("useAuth must be used within a Auth Provider");
 
     return context;
 };

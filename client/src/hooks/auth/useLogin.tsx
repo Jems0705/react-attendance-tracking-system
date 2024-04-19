@@ -1,9 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { useAxios } from "../useAxios";
+import axios from "@/services/axios";
 
 export const useLogin = () => {
-    const axios = useAxios();
-
     return useMutation({
         mutationKey: ["auth"],
         mutationFn: async (data: any) => {

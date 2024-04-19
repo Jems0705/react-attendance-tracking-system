@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import { Suspense, lazy } from "react";
-import { AuthContextProvider } from "./contexts/auth/AuthContext";
+import { AuthContextProvider } from "./contexts/auth/AuthProvider";
 import { ProtectedRoute } from "./hooks/auth/ProtectedRoute";
 import { PageLayout } from "./components/PageLayout";
 
@@ -18,6 +18,8 @@ const ClockInPage = lazy(() => import("@/pages/ClockIn"));
 const ClockOutPage = lazy(() => import("@/pages/ClockOut"));
 const ProfilePage = lazy(() => import("@/pages/Profile"));
 const SettingsPage = lazy(() => import("@/pages/Settings"));
+
+import "semantic-ui-css/semantic.min.css";
 
 const router = createBrowserRouter([
     {

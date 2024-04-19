@@ -1,7 +1,4 @@
-import jwt from "jsonwebtoken";
-
 import User from "../models/userModel.js";
-
 import generateToken from "../utils/generateToken.js";
 
 // @desc    Login user
@@ -25,7 +22,7 @@ const authLogin = async (req, res, next) => {
             throw new Error("Invalid email or password.");
         }
 
-        const { accessToken } = generateToken(res, {
+        const { accessToken } = generateToken({
             user: { id: foundUser._id, email: foundUser.email },
         });
 
@@ -62,62 +59,11 @@ const authSignUp = async (req, res, next) => {
             throw new Error("Invalid user data.");
         }
 
-        const { accessToken } = generateToken(res, {
+        const { accessToken } = generateToken({
             user: { id: user._id, email: user.email },
         });
 
         res.status(200).json({ accessToken });
-    } catch (error) {
-        next(error);
-    }
-};
-
-// @desc    Refresh token
-// route    GET /auth/refresh
-// @access  public
-const authRefresh = async (req, res, next) => {
-    try {
-        const cookies = req.cookies;
-
-        if (!cookies?.jwt) {
-            res.status(401);
-            throw new Error("Unauthorized.");
-        }
-
-        const refreshToken = cookies.jwt;
-
-        jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_TOKEN_SECRET,
-            async (err, decoded) => {
-                if (err) {
-                    res.status(403);
-                    throw new Error("Forbidden");
-                }
-
-                const foundUser = await User.findOne({
-                    _id: decoded?.user?.id,
-                });
-
-                if (!foundUser) {
-                    res.status(401);
-                    throw new Error("Unauthorized.");
-                }
-
-                const { accessToken } = generateToken(
-                    res,
-                    {
-                        user: {
-                            id: foundUser._id,
-                            email: foundUser.email,
-                        },
-                    },
-                    { onlyAccessToken: true }
-                );
-
-                res.json({ accessToken });
-            }
-        );
     } catch (error) {
         next(error);
     }
@@ -154,4 +100,4 @@ const getProfile = async (req, res, next) => {
     }
 };
 
-export { authLogin, authSignUp, authRefresh, authLogout, getProfile };
+export { authLogin, authSignUp, authLogout, getProfile };

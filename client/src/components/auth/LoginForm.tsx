@@ -7,8 +7,11 @@ import { useLogin } from "@/hooks/auth/useLogin";
 import { AuthFormSchemaType, authFormSchema } from "@/schema/authFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/auth/AuthProvider";
 
 export const LoginForm = () => {
+    const { setAuth } = useAuth();
+
     const navigate = useNavigate();
     const { mutate: login, isPending: isLoggingIn } = useLogin();
 
@@ -25,7 +28,13 @@ export const LoginForm = () => {
     const onSubmit = (values: AuthFormSchemaType) => {
         console.log(values);
 
-        login(values, { onSuccess: () => navigate("/") });
+        login(values, {
+            onSuccess: (data) => {
+                localStorage.setItem("accessToken", data.accessToken);
+                setAuth(data.accessToken);
+                navigate("/");
+            },
+        });
     };
 
     return (
