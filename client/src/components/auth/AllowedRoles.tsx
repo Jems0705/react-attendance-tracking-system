@@ -16,7 +16,7 @@ export const AllowedRoles: FC<AllowedRolesProps & PropsWithChildren> = ({
 }) => {
     const { data: authUser, isLoading, isFetching } = useGetAuth();
 
-    if (type === "component") {
+    if (roles) {
         const hasAccess = roles.includes(authUser?.role as string);
 
         if (hasAccess) return children;

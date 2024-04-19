@@ -73,10 +73,9 @@ const router = createBrowserRouter([
                         path: "/classes",
                         element: (
                             <Suspense fallback={<FullLoader />}>
-                                {/* also add admin if available */}
                                 <AllowedRoles
                                     type="page"
-                                    roles={[roles.TEACHER]}
+                                    roles={[roles.TEACHER, roles.STUDENT]}
                                 >
                                     <ClassesPage />
                                 </AllowedRoles>
@@ -87,6 +86,7 @@ const router = createBrowserRouter([
                                 path: "new",
                                 element: (
                                     <Suspense fallback={<FullLoader />}>
+                                        {/* add alsoadmin if available */}
                                         <AllowedRoles
                                             type="page"
                                             roles={[roles.TEACHER]}

@@ -13,6 +13,12 @@ const getClasses = async (req, res, next) => {
 
             res.status(200).json(classes);
         }
+
+        if (req.userRole === roles.Student) {
+            const classes = await Class.find({ students: user._id });
+
+            res.status(200).json(classes);
+        }
     } catch (error) {
         next(error);
     }
