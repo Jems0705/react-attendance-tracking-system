@@ -1,11 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPrivate from "../useAxiosPrivate";
+import { Class } from "../class/useGetClasses";
 
 export type Attendance = {
     _id: string;
-    name: string;
-    teacher: string;
-    students: string[];
+    student: {
+        _id: string;
+        firstName: string;
+        lastName: string;
+    };
+    class: Pick<Class, "_id" | "name">;
+    clockIn: Date;
+    clockOut: Date;
     createdAt: Date;
     updatedAt: Date;
 };

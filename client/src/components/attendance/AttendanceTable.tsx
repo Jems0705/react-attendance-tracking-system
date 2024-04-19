@@ -9,48 +9,55 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useGetAttendance } from "@/hooks/attendance/useGetAttendance";
+import {
+    Attendance,
+    useGetAttendance,
+} from "@/hooks/attendance/useGetAttendance";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
 
-type StudentAttendance = {
-    id: string;
-    name: string;
-    class: string;
-    timeIn: string;
-    timeOut: string;
-};
+import { format } from "date-fns";
 
 export const AttendanceTable = () => {
     const { data: attendance } = useGetAttendance();
 
     console.log("attendance", attendance);
 
-    const columns: ColumnDef<StudentAttendance>[] = [
+    const columns: ColumnDef<Attendance>[] = [
         {
             accessorKey: "name",
             header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Name" />
+                <DataTableColumnHeader column={column} title="Student" />
             ),
+            cell: ({ row }) =>
+                `${row.original.student.firstName} ${row.original.student.lastName}`,
         },
         {
             accessorKey: "class",
             header: ({ column }) => (
                 <DataTableColumnHeader column={column} title="Class" />
             ),
+            cell: ({ row }) => `${row.original.class.name}`,
         },
         {
-            accessorKey: "timeIn",
+            accessorKey: "clockIn",
             header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Time In" />
+                <DataTableColumnHeader column={column} title="Clock In" />
             ),
+            cell: ({ row }) => format(row.original.clockIn, "h:mm:ss aaa"),
         },
         {
-            accessorKey: "timeOut",
+            accessorKey: "clockOut",
             header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Time Out" />
+                <DataTableColumnHeader column={column} title="Clock Out" />
             ),
+            cell: ({ row }) => {
+                if (row.original?.clockOut) {
+                    return format(row.original.clockOut, "h:mm:ss aaa");
+                }
+                return <p className="italic">No time out yet.</p>;
+            },
         },
         {
             id: "actions",
@@ -68,13 +75,7 @@ export const AttendanceTable = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() =>
-                                    navigator.clipboard.writeText(payment.id)
-                                }
-                            >
-                                Copy payment ID
-                            </DropdownMenuItem>
+                            <DropdownMenuItem>Copy payment ID</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>View customer</DropdownMenuItem>
                             <DropdownMenuItem>
@@ -87,24 +88,6 @@ export const AttendanceTable = () => {
         },
     ];
 
-    const data = [
-        {
-            id: "728ed52f",
-            name: "James Santos",
-            class: "3BSIT4B",
-            timeIn: "10:01AM",
-            timeOut: "-",
-        },
-        {
-            id: "542ercs4",
-            name: "John Doe",
-            class: "2BSIT4B",
-            timeIn: "10:02AM",
-            timeOut: "-",
-        },
-        // ...
-    ];
-
     return (
         <section className="flex flex-1 flex-col">
             <div className="flex flex-row gap-1">
@@ -114,7 +97,11 @@ export const AttendanceTable = () => {
                     </Button>
                 </Link>
             </div>
-            <DataTable columns={columns} data={data} />
+            <DataTable
+                columns={columns}
+                data={attendance || []}
+                filterName="class"
+            />
         </section>
     );
 };

@@ -65,19 +65,6 @@ export const ClassTable = () => {
         },
     ];
 
-    // const data = [
-    //     {
-    //         id: "728ed52f",
-    //         name: "Class A",
-    //         students: 16,
-    //     },
-    //     {
-    //         id: "542ercs4",
-    //         name: "Class B",
-    //         students: 37,
-    //     },
-    // ];
-
     return (
         <section className="flex flex-1 flex-col">
             <div className="flex flex-row gap-1">

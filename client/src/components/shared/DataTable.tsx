@@ -34,7 +34,8 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
     columns,
     data,
-}: DataTableProps<TData, TValue>) {
+    filterName = "name",
+}: DataTableProps<TData, TValue> & { filterName?: string }) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -58,18 +59,21 @@ export function DataTable<TData, TValue>({
         },
     });
 
+    console.log("filter", table.getColumn(filterName));
+
     return (
         <div>
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter names..."
                     value={
-                        (table.getColumn("name")?.getFilterValue() as string) ??
-                        ""
+                        (table
+                            .getColumn(filterName)
+                            ?.getFilterValue() as string) ?? ""
                     }
                     onChange={(event) =>
                         table
-                            .getColumn("name")
+                            .getColumn(filterName)
                             ?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"

@@ -19,12 +19,15 @@ import {
 } from "@/components/ui/command";
 import { useGetClasses } from "@/hooks/class/useGetClasses";
 import { useClockOut } from "@/hooks/attendance/useClockOut";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AttendanceScannerProps = {
     type: "in" | "out";
 };
 
 export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
+    const queryClient = useQueryClient();
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
 
@@ -42,7 +45,13 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                     { student, classId: value },
                     {
                         onSuccess: () => {
-                            console.log("success");
+                            setValue("");
+                            queryClient.invalidateQueries({
+                                queryKey: ["attendance"],
+                            });
+                        },
+                        onSettled: () => {
+                            setValue("");
                         },
                     }
                 );
@@ -53,7 +62,13 @@ export const AttendanceScanner: FC<AttendanceScannerProps> = ({ type }) => {
                     { student, classId: value },
                     {
                         onSuccess: () => {
-                            console.log("success");
+                            setValue("");
+                            queryClient.invalidateQueries({
+                                queryKey: ["attendance"],
+                            });
+                        },
+                        onSettled: () => {
+                            setValue("");
                         },
                     }
                 );

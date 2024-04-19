@@ -12,8 +12,8 @@ const attendanceSchema = new mongoose.Schema(
             ref: "Class",
             required: true,
         },
-        timeIn: { type: Date },
-        timeOut: { type: Date },
+        clockIn: { type: Date },
+        clockOut: { type: Date },
     },
     {
         timestamps: true,

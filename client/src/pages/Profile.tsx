@@ -7,9 +7,9 @@ export default function Profile() {
 
     const generateQrCode = () => {
         const student = {
-            _id: "66209009aad99c764f91867d",
-            prn: "1167",
-            name: "John Doe",
+            _id: "6623ad4f05c74c0611022b27",
+            prn: "88763",
+            name: "Student Test Doe",
         };
         setQrCodeData(JSON.stringify(student));
     };
