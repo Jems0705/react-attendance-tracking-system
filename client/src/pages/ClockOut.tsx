@@ -1,3 +1,5 @@
+import { AttendanceScanner } from "@/components/attendance/AttendanceScanner";
+
 export default function ClockOut() {
-    return <div>Clock Out</div>;
+    return <AttendanceScanner type="out" />;
 }

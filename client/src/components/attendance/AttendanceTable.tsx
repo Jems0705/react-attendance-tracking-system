@@ -9,6 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useGetAttendance } from "@/hooks/attendance/useGetAttendance";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -22,6 +23,10 @@ type StudentAttendance = {
 };
 
 export const AttendanceTable = () => {
+    const { data: attendance } = useGetAttendance();
+
+    console.log("attendance", attendance);
+
     const columns: ColumnDef<StudentAttendance>[] = [
         {
             accessorKey: "name",

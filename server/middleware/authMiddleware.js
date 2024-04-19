@@ -29,37 +29,16 @@ const protect = async (req, res, next) => {
             throw new Error("Unauthorized.");
         }
 
-        // TODO
         const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
 
         const user = await User.findById(decoded.user.id).select(
             "-password -__v"
         );
 
-        req.user = { ...user };
+        req.user = user;
         req.userRole = user.role;
 
         next();
-
-        // jwt.verify(
-        //     token,
-        //     process.env.JWT_ACCESS_TOKEN_SECRET,
-        //     async function (err, decoded) {
-        //         if (err) {
-        //             res.status(401);
-        //             throw new Error(err.message);
-        //         }
-
-        //         const user = await User.findById(decoded.user.id).select(
-        //             "-password -__v"
-        //         );
-
-        //         req.user = { ...user };
-        //         req.userRole = user.role;
-
-        //         next();
-        //     }
-        // );
     } catch (error) {
         next(error);
     }

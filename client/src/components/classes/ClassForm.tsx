@@ -30,6 +30,9 @@ import { useNavigate } from "react-router-dom";
 import { useGetTeachers } from "@/hooks/teacher/useGetTeachers";
 import { useGetStudents } from "@/hooks/student/useGetStudents";
 
+import { Autocomplete, TextField } from "@mui/material";
+import { DevTool } from "@hookform/devtools";
+
 export const ClassForm = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -37,17 +40,7 @@ export const ClassForm = () => {
     const { mutate: createClass } = useCreateClass();
 
     const { data: teachers } = useGetTeachers();
-    const { data } = useGetStudents();
-
-    console.log("students", data);
-
-    const students = [
-        { value: "23123wdawdasdwrasdasd", text: "Student 1" },
-        { value: "gdfw412asdasdasdad", text: "Student 2" },
-        { value: "qweas", text: "Student 3" },
-        { value: "asddfsdf", text: "Student 4" },
-        { value: "gdfw412dasdasdasdasdad", text: "Student 5" },
-    ];
+    const { data: students } = useGetStudents();
 
     const form = useForm<ClassFormSchemaType>({
         defaultValues: {
@@ -59,8 +52,6 @@ export const ClassForm = () => {
     });
 
     const onSubmit = (values: ClassFormSchemaType) => {
-        console.log("values", values);
-
         createClass(values, {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ["classes"] });
@@ -187,8 +178,62 @@ export const ClassForm = () => {
                     }}
                 /> */}
 
+                <FormField
+                    control={form.control}
+                    name="students"
+                    render={({ field }) => {
+                        return (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>Students</FormLabel>
+                                <Autocomplete
+                                    {...field}
+                                    multiple
+                                    options={
+                                        students
+                                            ? students
+                                                  .map((student) => student._id)
+                                                  .filter(
+                                                      (student) =>
+                                                          !field.value.includes(
+                                                              student
+                                                          )
+                                                  )
+                                            : []
+                                    }
+                                    getOptionLabel={(option) => {
+                                        const optionLabel =
+                                            students &&
+                                            students.find(
+                                                (student) =>
+                                                    student._id === option
+                                            );
+
+                                        if (!optionLabel) return "Loading...";
+
+                                        return optionLabel.name;
+                                    }}
+                                    isOptionEqualToValue={(option, value) => {
+                                        return option == value;
+                                    }}
+                                    onChange={(_event, values) => {
+                                        field.onChange(values);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="filled"
+                                        />
+                                    )}
+                                />
+                                <FormMessage />
+                            </FormItem>
+                        );
+                    }}
+                />
+
                 <Button type="submit">Submit</Button>
             </form>
+            <DevTool control={form.control} />
         </Form>
     );
 };

@@ -9,18 +9,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Class, useGetClasses } from "@/hooks/class/useGetClasses";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Plus, QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
 
-type TClass = {
-    id: string;
-    name: string;
-    students: number;
-};
-
 export const ClassTable = () => {
-    const columns: ColumnDef<TClass>[] = [
+    const { data: classes } = useGetClasses();
+    console.log("classes", classes);
+
+    const columns: ColumnDef<Class>[] = [
         {
             accessorKey: "name",
             header: ({ column }) => (
@@ -35,6 +33,9 @@ export const ClassTable = () => {
                     title="No. of Students"
                 />
             ),
+            cell: ({ row }) => {
+                return row.original.students.length;
+            },
         },
         {
             id: "actions",
@@ -52,18 +53,11 @@ export const ClassTable = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() =>
-                                    navigator.clipboard.writeText(payment.id)
-                                }
-                            >
-                                Copy payment ID
-                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>View customer</DropdownMenuItem>
-                            <DropdownMenuItem>
-                                View payment details
+                            <DropdownMenuItem onClick={() => alert("view")}>
+                                View
                             </DropdownMenuItem>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
@@ -71,18 +65,18 @@ export const ClassTable = () => {
         },
     ];
 
-    const data = [
-        {
-            id: "728ed52f",
-            name: "Class A",
-            students: 16,
-        },
-        {
-            id: "542ercs4",
-            name: "Class B",
-            students: 37,
-        },
-    ];
+    // const data = [
+    //     {
+    //         id: "728ed52f",
+    //         name: "Class A",
+    //         students: 16,
+    //     },
+    //     {
+    //         id: "542ercs4",
+    //         name: "Class B",
+    //         students: 37,
+    //     },
+    // ];
 
     return (
         <section className="flex flex-1 flex-col">
@@ -93,7 +87,7 @@ export const ClassTable = () => {
                     </Button>
                 </Link>
             </div>
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={classes || []} />
         </section>
     );
 };
