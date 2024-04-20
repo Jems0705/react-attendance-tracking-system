@@ -76,12 +76,12 @@ const clockInAttendance = async (req, res, next) => {
 
         if (!student) {
             res.status(400);
-            throw new Error("Invalid QR code");
+            throw new Error("Invalid QR code.");
         }
 
         if (!student?._id) {
             res.status(400);
-            throw new Error("Invalid QR code");
+            throw new Error("Invalid QR code.");
         }
 
         if (req.userRole === roles.Teacher) {
@@ -154,12 +154,12 @@ const clockOutAttendance = async (req, res, next) => {
 
         if (!student) {
             res.status(400);
-            throw new Error("Invalid QR code");
+            throw new Error("Invalid QR code.");
         }
 
         if (!student?._id) {
             res.status(400);
-            throw new Error("Invalid QR code");
+            throw new Error("Invalid QR code.");
         }
 
         if (req.userRole === roles.Teacher) {

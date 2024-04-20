@@ -16,8 +16,6 @@ export const PageLayout = () => {
     const { drawerWidth, isClosing, mobileOpen, handleDrawerToggle } =
         useSidebar();
 
-    console.log("mobileOpen", mobileOpen);
-
     return (
         <Box sx={{ display: "flex", height: "100vh" }}>
             <CssBaseline />

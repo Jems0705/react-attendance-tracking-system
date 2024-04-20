@@ -28,7 +28,7 @@ const teacherSchema = z.object({
         message: "Password is required.",
     }),
     confirmPassword: z.string().min(1, {
-        message: "Password is required.",
+        message: "Confirm password is required.",
     }),
 });
 

@@ -200,7 +200,7 @@ export const ClassForm = () => {
                                     <TextField
                                         {...params}
                                         variant="outlined"
-                                        placeholder="Select class"
+                                        placeholder="Select student"
                                     />
                                 )}
                             />

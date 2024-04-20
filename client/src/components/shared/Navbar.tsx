@@ -30,6 +30,7 @@ export const Navbar = () => {
                 }}
             >
                 <NavbarMenu />
+                <NavbarLogout />
             </Drawer>
             <Drawer
                 variant="permanent"
@@ -43,7 +44,6 @@ export const Navbar = () => {
                 open
             >
                 <NavbarMenu />
-
                 <NavbarLogout />
             </Drawer>
         </div>

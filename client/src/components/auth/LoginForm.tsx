@@ -1,19 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
-import { Form, FormField, FormMessage } from "../ui/form";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { AuthFormSchemaType, authFormSchema } from "@/schema/authFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/auth/AuthProvider";
-import { Stack, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    IconButton,
+    InputAdornment,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { DevTool } from "@hookform/devtools";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useState } from "react";
+
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 export const LoginForm = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const { setAuth } = useAuth();
 
     const navigate = useNavigate();
@@ -28,8 +37,6 @@ export const LoginForm = () => {
     });
 
     const onSubmit = (values: AuthFormSchemaType) => {
-        console.log(values);
-
         login(values, {
             onSuccess: (data) => {
                 localStorage.setItem("accessToken", data.accessToken);
@@ -77,6 +84,7 @@ export const LoginForm = () => {
                                 <TextField
                                     {...field}
                                     size="small"
+                                    disabled={isLoggingIn}
                                     error={Boolean(
                                         form.formState.errors?.email
                                     )}
@@ -99,7 +107,8 @@ export const LoginForm = () => {
                                 </Typography>
                                 <TextField
                                     {...field}
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
+                                    disabled={isLoggingIn}
                                     size="small"
                                     error={Boolean(
                                         form.formState.errors?.password
@@ -108,20 +117,46 @@ export const LoginForm = () => {
                                         form.formState.errors?.password
                                             ?.message as string
                                     }
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() =>
+                                                        setShowPassword(
+                                                            (prev) => !prev
+                                                        )
+                                                    }
+                                                >
+                                                    {showPassword ? (
+                                                        <VisibilityOffIcon />
+                                                    ) : (
+                                                        <VisibilityIcon />
+                                                    )}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
                                 />
                             </Stack>
                         )}
                     />
                 </Stack>
 
-                <Button>Login</Button>
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isLoggingIn}
+                >
+                    {isLoggingIn ? "Logging in..." : "Login"}
+                </Button>
 
-                <Stack textAlign="center" mt="16px">
-                    Don&apos;t have an account?
+                <Box textAlign="center" mt="16px">
+                    Don&apos;t have an account?{" "}
                     <Link to="/register" className="underline">
                         Create an account
                     </Link>
-                </Stack>
+                </Box>
             </Stack>
 
             <DevTool control={form.control} />

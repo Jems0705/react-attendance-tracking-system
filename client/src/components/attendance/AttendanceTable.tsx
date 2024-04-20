@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { useGetAttendance } from "@/hooks/attendance/useGetAttendance";
-import { format } from "date-fns";
+import { format, isToday } from "date-fns";
 import { QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
@@ -11,13 +11,31 @@ import roles from "@/data/roles";
 
 type AttendanceTableProps = {
     withScan?: boolean;
+    showDate?: boolean;
+    todayOnly?: boolean;
 };
 
 export const AttendanceTable: FC<AttendanceTableProps> = ({
     withScan = false,
+    showDate = true,
+    todayOnly = false,
 }) => {
     const { data: authUser } = useGetAuth();
-    const { data: attendance, isFetching } = useGetAttendance();
+    const { data: attendanceData, isFetching } = useGetAttendance();
+
+    const attendance = useMemo(() => {
+        if (attendanceData) {
+            if (todayOnly) {
+                return attendanceData.filter((attendance) => {
+                    return isToday(attendance.createdAt);
+                });
+            }
+
+            return attendanceData;
+        }
+
+        return [];
+    }, [attendanceData, todayOnly]);
 
     const columns: GridColDef[] = [
         ...(authUser?.role !== roles.STUDENT
@@ -25,7 +43,7 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
                   {
                       field: "student",
                       headerName: "Student",
-                      width: 300,
+                      width: 200,
                       valueGetter: (_value, row) => {
                           return `${row.student?.firstName || ""} ${
                               row.student?.lastName || ""
@@ -38,15 +56,28 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
         {
             field: "class",
             headerName: "Class",
-            width: 300,
+            width: 250,
             valueGetter: (_value, row) => {
                 return row.class.name;
             },
         },
+
+        ...(showDate
+            ? [
+                  {
+                      field: "date",
+                      headerName: "Date",
+                      width: 150,
+                      valueGetter: (_value, row) => {
+                          return format(row.createdAt, "MM/dd/y");
+                      },
+                  },
+              ]
+            : []),
         {
             field: "clockIn",
             headerName: "Clock In",
-            width: 300,
+            width: 150,
             valueGetter: (_value, row) => {
                 return format(row.clockIn, "h:mm:ss aaa");
             },
@@ -54,7 +85,7 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
         {
             field: "clockOut",
             headerName: "Clock Out",
-            width: 300,
+            width: 150,
             valueGetter: (_value, row) => {
                 if (row?.clockOut) {
                     return format(row.clockOut, "h:mm:ss aaa");

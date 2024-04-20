@@ -17,6 +17,7 @@ const errorHandler = (err, req, res, next) => {
 
     if (err.name === "TokenExpiredError") {
         statusCode = 401;
+        message = "Your access token has expired. Try to login again.";
     }
 
     res.status(statusCode).json({

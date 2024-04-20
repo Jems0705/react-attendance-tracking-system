@@ -1,11 +1,25 @@
 import { AttendanceTable } from "@/components/attendance/AttendanceTable";
 import { useGetAttendance } from "@/hooks/attendance/useGetAttendance";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { isToday } from "date-fns";
+import { useMemo } from "react";
 
 export default function Dashboard() {
     const { data: attendance } = useGetAttendance();
+
+    const todaysAttendance = useMemo(() => {
+        if (attendance) {
+            return attendance.filter((attend) => {
+                return isToday(attend.createdAt);
+            });
+        }
+        return [];
+    }, [attendance]);
+
+    console.log("todaysAttendance", todaysAttendance);
+
     const timelogs =
-        attendance?.reduce(
+        todaysAttendance?.reduce(
             (acc, curr) => {
                 return {
                     ...acc,
@@ -17,7 +31,7 @@ export default function Dashboard() {
         ) || 0;
 
     const completeAttendance =
-        attendance?.reduce((acc, curr) => {
+        todaysAttendance?.reduce((acc, curr) => {
             if (curr.clockIn && curr?.clockOut) {
                 return acc + 1;
             }
@@ -68,7 +82,7 @@ export default function Dashboard() {
         // </Stack>
 
         <Grid container columnSpacing={1} rowSpacing={1}>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -97,7 +111,7 @@ export default function Dashboard() {
                     </Stack>
                 </Paper>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -126,7 +140,7 @@ export default function Dashboard() {
                     </Stack>
                 </Paper>
             </Grid>
-            <Grid item xs={6} md={3}>
+            <Grid item xs={12} sm={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -161,7 +175,7 @@ export default function Dashboard() {
 
             <Grid item xs={12}>
                 <Box>
-                    <AttendanceTable />
+                    <AttendanceTable showDate={false} todayOnly />
                 </Box>
             </Grid>
         </Grid>

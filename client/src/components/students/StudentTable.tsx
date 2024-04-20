@@ -1,8 +1,6 @@
 import { FC } from "react";
-
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-
-import { useGetStudents } from "@/hooks/student/useGetStudents";
+import { useGetMyStudents } from "@/hooks/student/useGetMyStudents";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,7 +17,7 @@ import { Box } from "@mui/material";
 
 export const StudentTable: FC = () => {
     const navigate = useNavigate();
-    const { data: students, isFetching } = useGetStudents();
+    const { data: students, isFetching } = useGetMyStudents();
 
     const columns: GridColDef[] = [
         {

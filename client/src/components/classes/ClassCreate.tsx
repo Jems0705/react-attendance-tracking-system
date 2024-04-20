@@ -54,15 +54,17 @@ export const ClassCreate = () => {
     return (
         <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <Stack p="16px" bgcolor="background.default">
+                <Stack p="16px" bgcolor="background.default" gap="8px">
                     <ClassForm />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={isCreating}
-                    >
-                        Create
-                    </Button>
+                    <Stack direction="row" justifyContent="flex-end">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            disabled={isCreating}
+                        >
+                            {isCreating ? "Creating..." : "Create"}
+                        </Button>
+                    </Stack>
                 </Stack>
             </form>
             <DevTool control={form.control} />
