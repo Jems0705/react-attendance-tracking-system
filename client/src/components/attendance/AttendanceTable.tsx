@@ -71,8 +71,6 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
         },
     ];
 
-    console.log("columns", columns);
-
     return (
         <section className="flex flex-1 flex-col gap-2 ">
             {withScan && (

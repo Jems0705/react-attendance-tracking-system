@@ -160,7 +160,7 @@ export default function Dashboard() {
             </Grid> */}
 
             <Grid item xs={12}>
-                <Box mt="8px">
+                <Box>
                     <AttendanceTable />
                 </Box>
             </Grid>

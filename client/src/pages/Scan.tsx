@@ -6,7 +6,12 @@ export default function Scan() {
     const routeMatch = useRouteMatch(["/attendance/scan"]);
 
     return (
-        <div className="flex flex-col h-full gap-3">
+        <Stack
+            gap="12px"
+            bgcolor="background.default"
+            p="16px"
+            borderRadius="8px"
+        >
             <div className="flex gap-1">
                 <Button
                     component={NavLink}
@@ -40,16 +45,7 @@ export default function Scan() {
                     Clock Out
                 </Button>
             </div>
-            <Stack
-                component="section"
-                flex={1}
-                sx={{
-                    borderColor: "common.white",
-                    borderWidth: "2px",
-                    borderRadius: "10px",
-                    p: "16px 24px",
-                }}
-            >
+            <Stack component="section" flex={1}>
                 {routeMatch?.pattern.path === "/attendance/scan" ? (
                     <Typography fontStyle="italic">
                         Select clock in or clock out.
@@ -58,6 +54,6 @@ export default function Scan() {
                     <Outlet />
                 )}
             </Stack>
-        </div>
+        </Stack>
     );
 }

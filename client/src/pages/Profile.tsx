@@ -45,7 +45,7 @@ export default function Profile() {
                         flexDirection: "column",
                         gap: "16px",
                     }}
-                    elevation={2}
+                    elevation={0}
                 >
                     <Typography variant="h6">My Profile</Typography>
                     <Stack gap="8px">
@@ -89,7 +89,7 @@ export default function Profile() {
                         flexDirection: "column",
                         gap: "16px",
                     }}
-                    elevation={2}
+                    elevation={0}
                 >
                     {authUser?.role === roles.STUDENT && !qrCodeData && (
                         <Box>
