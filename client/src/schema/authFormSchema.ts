@@ -1,12 +1,10 @@
 import { z } from "zod";
 
 export const authFormSchema = z.object({
-    email: z
-        .string()
-        .min(1, {
-            message: "Email is required.",
-        })
-        .email({ message: "Invalid Email." }),
+    email: z.string().min(1, {
+        message: "Email/LRN is required.",
+    }),
+
     password: z.string().min(1, {
         message: "Password is required.",
     }),

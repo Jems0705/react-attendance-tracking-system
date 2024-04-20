@@ -49,6 +49,19 @@ export const NavbarMenu = () => {
                                     key={menu.path}
                                     component={NavLink}
                                     to={menu.path}
+                                    sx={{
+                                        borderRadius: "8px",
+                                        "&.active": {
+                                            bgcolor: "primary.main",
+                                            color: "common.white",
+                                            "&:hover": {
+                                                bgcolor: "primary.dark",
+                                            },
+                                            "& .MuiListItemIcon-root": {
+                                                color: "common.white",
+                                            },
+                                        },
+                                    }}
                                 >
                                     <ListItemIcon>{menu.icon}</ListItemIcon>
                                     <ListItemText primary={menu.label} />

@@ -8,6 +8,7 @@ import { SidebarProvider } from "./contexts/SidebarProvider";
 import { FullLoader } from "./components/shared/FullLoader";
 import { AllowedRoles } from "./components/auth/AllowedRoles";
 import roles from "./data/roles";
+import { AuthLayout } from "./components/auth/AuthLayout";
 
 const LoginPage = lazy(() => import("@/pages/Login"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
@@ -18,6 +19,7 @@ const ClassPage = lazy(() => import("@/pages/Class"));
 const ClassEditPage = lazy(() => import("@/pages/ClassEdit"));
 const NewClassPage = lazy(() => import("@/pages/NewClass"));
 const StudentsPage = lazy(() => import("@/pages/Students"));
+const StudentPage = lazy(() => import("@/pages/Student"));
 const AttendancePage = lazy(() => import("@/pages/Attendance"));
 const ScanPage = lazy(() => import("@/pages/Scan"));
 const ClockInPage = lazy(() => import("@/pages/ClockIn"));
@@ -27,20 +29,25 @@ const SettingsPage = lazy(() => import("@/pages/Settings"));
 
 const router = createBrowserRouter([
     {
-        path: "/login",
-        element: (
-            <Suspense fallback={<FullLoader />}>
-                <LoginPage />
-            </Suspense>
-        ),
-    },
-    {
-        path: "/register",
-        element: (
-            <Suspense fallback={<FullLoader />}>
-                <RegisterPage />
-            </Suspense>
-        ),
+        element: <AuthLayout />,
+        children: [
+            {
+                path: "/login",
+                element: (
+                    <Suspense fallback={<FullLoader />}>
+                        <LoginPage />
+                    </Suspense>
+                ),
+            },
+            {
+                path: "/register",
+                element: (
+                    <Suspense fallback={<FullLoader />}>
+                        <RegisterPage />
+                    </Suspense>
+                ),
+            },
+        ],
     },
     {
         path: "/",
@@ -131,6 +138,21 @@ const router = createBrowserRouter([
                                 </AllowedRoles>
                             </Suspense>
                         ),
+                        children: [
+                            {
+                                path: ":studentId",
+                                element: (
+                                    <Suspense fallback={<FullLoader />}>
+                                        <AllowedRoles
+                                            type="page"
+                                            roles={[roles.TEACHER]}
+                                        >
+                                            <StudentPage />
+                                        </AllowedRoles>
+                                    </Suspense>
+                                ),
+                            },
+                        ],
                     },
                     {
                         path: "/attendance",
@@ -140,7 +162,7 @@ const router = createBrowserRouter([
                                     type="page"
                                     roles={[roles.TEACHER]}
                                 >
-                                    <AttendancePage />/
+                                    <AttendancePage />
                                 </AllowedRoles>
                             </Suspense>
                         ),

@@ -1,12 +1,11 @@
 import express from "express";
-import { getStudents, getStudent } from "../controllers/studentController.js";
+// import { getClockedIn } from "../controllers/dashboardController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.use(protect);
 
-router.get("/", getStudents);
-router.get("/:studentId", getStudent);
+router.get("/");
 
 export default router;

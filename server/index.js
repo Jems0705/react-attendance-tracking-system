@@ -11,6 +11,7 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import classRoutes from "./routes/classRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 import { protect } from "./middleware/authMiddleware.js";
 
@@ -33,6 +34,7 @@ app.use("/attendance", attendanceRoutes);
 app.use("/classes", classRoutes);
 app.use("/teachers", teacherRoutes);
 app.use("/students", studentRoutes);
+app.use("/dashboard", dashboardRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

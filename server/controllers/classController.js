@@ -36,7 +36,18 @@ const getClass = async (req, res, next) => {
             const _class = await Class.findOne({
                 _id: classId,
                 teacher: user._id,
-            });
+            })
+                .select("-__v")
+                .populate([
+                    {
+                        path: "students",
+                        select: "-password -__v",
+                    },
+                    {
+                        path: "teacher",
+                        select: "-password -__v",
+                    },
+                ]);
 
             if (!_class) {
                 res.status(404);

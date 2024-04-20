@@ -10,23 +10,22 @@ export enum ThemeVariantsProps {
 export const theme = (mode: ThemeVariantsProps) => {
     console.log("mode", mode);
     return createTheme({
-        // palette: {
-        //     mode: "dark",
-        //     // primary: {
-        //     //     main: "#1976d2",
-        //     // },
-        //     // secondary: {
-        //     //     main: "#2ec5d3",
-        //     // },
-        //     // background: {
-        //     //     default: "#192231",
-        //     //     paper: "#24344d",
-        //     // },
-        // },
         palette: {
-            mode,
-            ...(mode === "light" ? lightModePallete : darkModePalette),
+            primary: { main: "#009688" },
+            secondary: { main: "#FF5722" },
+            error: { main: "#F44336" },
+            warning: { main: "#FF9800" },
+            info: { main: "#1E88E5" },
+            success: { main: "#4CAF50" },
+            text: {
+                primary: "#212121",
+                secondary: "#757575",
+            },
         },
+        // palette: {
+        //     mode,
+        //     ...(mode === "light" ? lightModePallete : darkModePalette),
+        // },
 
         typography: typography,
     });

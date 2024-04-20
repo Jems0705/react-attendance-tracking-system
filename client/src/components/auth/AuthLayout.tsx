@@ -1,5 +1,7 @@
 import { Outlet } from "react-router-dom";
 
+import authBg from "/auth-bg.jpg";
+
 export const AuthLayout = () => {
     return (
         <main className="flex h-screen">
@@ -8,8 +10,8 @@ export const AuthLayout = () => {
             </section>
 
             <img
-                src="/assets/images/side-img.svg"
-                alt="logo"
+                src={authBg}
+                alt="image"
                 className="hidden xl:block h-screen w-1/2 object-cover bg-no-repeat"
             />
         </main>

@@ -6,8 +6,12 @@ import { Label } from "../ui/label";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { AuthFormSchemaType, authFormSchema } from "@/schema/authFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useAuth } from "@/contexts/auth/AuthProvider";
+import { Stack, TextField, Typography } from "@mui/material";
+import { DevTool } from "@hookform/devtools";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export const LoginForm = () => {
     const { setAuth } = useAuth();
@@ -32,89 +36,95 @@ export const LoginForm = () => {
                 setAuth(data.accessToken);
                 navigate("/");
             },
+            onError: (err) => {
+                if (axios.isAxiosError(err)) {
+                    toast.error(err.response?.data.message, { duration: 5000 });
+                    form.setError("email", {});
+                    form.setError("password", {});
+                }
+            },
         });
     };
 
     return (
-        <Form {...form}>
-            <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex items-center justify-center py-12"
-                >
-                    <div className="mx-auto grid w-[350px] gap-6">
-                        <div className="grid gap-2 text-center">
-                            <h1 className="text-3xl font-bold">Login</h1>
-                            <p className="text-balance text-muted-foreground">
-                                Enter your credentials below to login to your
-                                account
-                            </p>
-                        </div>
-                        <div className="grid gap-4">
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="email">
-                                            Email or LRN
-                                        </Label>
-                                        <Input
-                                            {...field}
-                                            placeholder="test@email.com"
-                                            disabled={isLoggingIn}
-                                        />
-                                        <FormMessage />
-                                    </div>
-                                )}
-                            />
+        <FormProvider {...form}>
+            <Stack
+                component="form"
+                width={"400px"}
+                gap="24px"
+                p="24px"
+                sx={{ borderRadius: "8px", border: "1px solid #c9c7bf" }}
+                onSubmit={form.handleSubmit(onSubmit)}
+            >
+                <Stack gap="8px" textAlign="center">
+                    <Typography fontSize="30px" fontWeight={700}>
+                        Login
+                    </Typography>
 
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <div className="grid gap-2">
-                                        <div className="flex items-center">
-                                            <Label htmlFor="password">
-                                                Password
-                                            </Label>
-                                        </div>
-                                        <Input
-                                            {...field}
-                                            type="password"
-                                            disabled={isLoggingIn}
-                                        />
-                                        <FormMessage />
-                                    </div>
-                                )}
-                            />
-
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={isLoggingIn}
-                            >
-                                Login
-                            </Button>
-                        </div>
-                        <div className="mt-4 text-center text-sm">
-                            Don&apos;t have an account?{" "}
-                            <Link to="/register" className="underline">
-                                Create an account
-                            </Link>
-                        </div>
-                    </div>
-                </form>
-                <div className="hidden bg-muted lg:block">
-                    <img
-                        // src="/placeholder.svg"
-                        alt="Image"
-                        width="1920"
-                        height="1080"
-                        className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+                    <Typography sx={{ textWrap: "balance", color: "#7a786d" }}>
+                        Enter your credentials below to login to your account
+                    </Typography>
+                </Stack>
+                <Stack gap="8px">
+                    <Controller
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <Stack gap="4px">
+                                <Typography fontWeight={500} fontSize="14px">
+                                    Email or LRN
+                                </Typography>
+                                <TextField
+                                    {...field}
+                                    size="small"
+                                    error={Boolean(
+                                        form.formState.errors?.email
+                                    )}
+                                    helperText={
+                                        form.formState.errors?.email
+                                            ?.message as string
+                                    }
+                                />
+                            </Stack>
+                        )}
                     />
-                </div>
-            </div>
-        </Form>
+
+                    <Controller
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <Stack gap="4px">
+                                <Typography fontWeight={500} fontSize="14px">
+                                    Password
+                                </Typography>
+                                <TextField
+                                    {...field}
+                                    type="password"
+                                    size="small"
+                                    error={Boolean(
+                                        form.formState.errors?.password
+                                    )}
+                                    helperText={
+                                        form.formState.errors?.password
+                                            ?.message as string
+                                    }
+                                />
+                            </Stack>
+                        )}
+                    />
+                </Stack>
+
+                <Button>Login</Button>
+
+                <Stack textAlign="center" mt="16px">
+                    Don&apos;t have an account?
+                    <Link to="/register" className="underline">
+                        Create an account
+                    </Link>
+                </Stack>
+            </Stack>
+
+            <DevTool control={form.control} />
+        </FormProvider>
     );
 };

@@ -10,7 +10,7 @@ export const useGetClass = ({ classId, enable = true }: UseGetClassProps) => {
     const axios = useAxiosPrivate();
 
     return useQuery({
-        enabled: classId && enable,
+        enabled: Boolean(classId) && enable,
         queryKey: ["classes", classId],
         queryFn: async () => {
             const res = await axios.get<Class>(`/classes/${classId}`);

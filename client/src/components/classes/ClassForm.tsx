@@ -44,7 +44,7 @@ export const ClassForm = () => {
     const { data: students } = useGetStudents();
 
     return (
-        <Stack>
+        <Stack gap="8px">
             <Controller
                 control={control}
                 name="name"
@@ -197,7 +197,11 @@ export const ClassForm = () => {
                                     field.onChange(values);
                                 }}
                                 renderInput={(params) => (
-                                    <TextField {...params} variant="filled" />
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        placeholder="Select class"
+                                    />
                                 )}
                             />
                         </Stack>

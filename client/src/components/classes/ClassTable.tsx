@@ -8,26 +8,28 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Class, useGetClasses } from "@/hooks/class/useGetClasses";
-import { Button } from "@mui/material";
+import { useGetClasses } from "@/hooks/class/useGetClasses";
+import { Box, Button } from "@mui/material";
 import { Button as ShadCNButton } from "@/components/ui/button";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Plus, QrCode } from "lucide-react";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { MoreHorizontal, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 export const ClassTable = () => {
     const navigate = useNavigate();
-    const { data: classes } = useGetClasses();
+    const { data: classes, isFetching } = useGetClasses();
 
     const columns: GridColDef[] = [
         {
             field: "name",
             headerName: "Name",
+            width: 300,
         },
         {
             field: "students",
             headerName: "No. of Students",
+            width: 300,
+
             valueGetter: (_value, row) => {
                 return row.students.length;
             },
@@ -35,6 +37,13 @@ export const ClassTable = () => {
         {
             field: "actions",
             headerName: "Actions",
+            disableColumnMenu: true,
+            disableExport: true,
+            disableReorder: true,
+            editable: false,
+            sortable: false,
+            filterable: false,
+            width: 300,
             renderCell: (params) => {
                 return (
                     <DropdownMenu>
@@ -83,12 +92,22 @@ export const ClassTable = () => {
                     new
                 </Button>
             </div>
-            <DataGrid
-                autoHeight
-                columns={columns}
-                rows={classes || []}
-                getRowId={(row) => row._id}
-            />
+            <Box bgcolor="background.default" p="16px" borderRadius="8px">
+                <DataGrid
+                    autoHeight
+                    columns={columns}
+                    rows={classes || []}
+                    getRowId={(row) => row._id}
+                    loading={isFetching}
+                    hideFooterSelectedRowCount
+                    slots={{ toolbar: GridToolbar }}
+                    slotProps={{
+                        toolbar: {
+                            showQuickFilter: true,
+                        },
+                    }}
+                />
+            </Box>
         </section>
     );
 };

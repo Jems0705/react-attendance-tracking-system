@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./shared/Navbar";
 import { useSidebar } from "@/contexts/SidebarProvider";
+import { BreadcrumbsRouter } from "./shared/BreadcrumbsRouter";
 
 export const PageLayout = () => {
     const { drawerWidth, isClosing, mobileOpen, handleDrawerToggle } =
@@ -18,13 +19,13 @@ export const PageLayout = () => {
     console.log("mobileOpen", mobileOpen);
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", height: "100vh" }}>
             <CssBaseline />
             <AppBar
                 position="fixed"
                 sx={{
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
-                    ml: { sm: `${drawerWidth}px` },
+                    // ml: { sm: `${drawerWidth}px` },
                 }}
             >
                 <Toolbar>
@@ -50,13 +51,17 @@ export const PageLayout = () => {
             <Box
                 component="main"
                 sx={{
-                    height: "90vh",
+                    // height: "90vh",
+                    height: "100%",
+                    bgcolor: "#f5f5f5",
                     flexGrow: 1,
                     p: 3,
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                 }}
             >
                 <Toolbar />
+
+                <BreadcrumbsRouter />
 
                 <Outlet />
             </Box>

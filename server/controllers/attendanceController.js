@@ -2,6 +2,8 @@ import { roles } from "../middleware/authMiddleware.js";
 import Attendance from "../models/attendanceModel.js";
 import Class from "../models/classModel.js";
 
+import isJSON from "../utils/isJSON.js";
+
 import { format } from "date-fns";
 
 // @desc    Get all attendance
@@ -56,8 +58,21 @@ const getAttendance = async (req, res, next) => {
 const clockInAttendance = async (req, res, next) => {
     try {
         const user = req.user;
-        const student = JSON.parse(req.body.student);
         const classId = req.body.classId;
+
+        const student = isJSON(req.body.student)
+            ? JSON.parse(req.body.student)
+            : null;
+
+        if (!student) {
+            res.status(400);
+            throw new Error("Invalid QR code");
+        }
+
+        if (!student?._id) {
+            res.status(400);
+            throw new Error("Invalid QR code");
+        }
 
         if (req.userRole === roles.Teacher) {
             const _class = await Class.findById(classId);
@@ -121,8 +136,21 @@ const clockInAttendance = async (req, res, next) => {
 const clockOutAttendance = async (req, res, next) => {
     try {
         const user = req.user;
-        const student = JSON.parse(req.body.student);
         const classId = req.body.classId;
+
+        const student = isJSON(req.body.student)
+            ? JSON.parse(req.body.student)
+            : null;
+
+        if (!student) {
+            res.status(400);
+            throw new Error("Invalid QR code");
+        }
+
+        if (!student?._id) {
+            res.status(400);
+            throw new Error("Invalid QR code");
+        }
 
         if (req.userRole === roles.Teacher) {
             const _class = await Class.findById(classId);

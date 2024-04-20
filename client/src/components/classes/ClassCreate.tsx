@@ -55,7 +55,7 @@ export const ClassCreate = () => {
         <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <ClassForm />
-                <Button type="submit" disabled={isCreating}>
+                <Button type="submit" variant="contained" disabled={isCreating}>
                     Create
                 </Button>
             </form>

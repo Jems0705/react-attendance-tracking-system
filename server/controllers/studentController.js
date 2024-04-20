@@ -33,21 +33,17 @@ const getStudent = async (req, res, next) => {
     try {
         const studentId = req.params.studentId;
 
-        const student = await User.findById();
+        const student = await User.findById(studentId).select("-__v -password");
         if (!student) {
             res.status(404);
-            throw new Error("No students found.");
+            throw new Error("No student found.");
         }
 
-        const formattedStudents = students.map((student) => {
-            const { firstName, lastName, ...rest } = student._doc;
+        const { firstName, lastName, ...rest } = student.toObject();
 
-            const name = `${firstName} ${lastName}`;
+        const name = `${firstName} ${lastName}`;
 
-            return { ...rest, name };
-        });
-
-        res.status(200).json(formattedStudents);
+        res.status(200).json({ ...rest, name });
     } catch (error) {
         next(error);
     }

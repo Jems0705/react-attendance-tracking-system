@@ -1,6 +1,7 @@
 import { Drawer } from "@mui/material";
 import { NavbarMenu } from "./NavbarMenu";
 import { useSidebar } from "@/contexts/SidebarProvider";
+import { NavbarLogout } from "./NavbarLogout";
 
 export const Navbar = () => {
     const {
@@ -42,6 +43,8 @@ export const Navbar = () => {
                 open
             >
                 <NavbarMenu />
+
+                <NavbarLogout />
             </Drawer>
         </div>
     );
