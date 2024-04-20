@@ -67,8 +67,8 @@ export default function Dashboard() {
         //     </Paper>
         // </Stack>
 
-        <Grid container columnSpacing={1}>
-            <Grid item xs={3}>
+        <Grid container columnSpacing={1} rowSpacing={1}>
+            <Grid item xs={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -78,7 +78,7 @@ export default function Dashboard() {
                     }}
                 >
                     <Stack flex={1} height="100%">
-                        <Typography fontSize={"14px"} fontWeight={700}>
+                        <Typography fontSize={"12px"} fontWeight={700}>
                             Today's Total Clocked In
                         </Typography>
 
@@ -97,7 +97,7 @@ export default function Dashboard() {
                     </Stack>
                 </Paper>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -107,7 +107,7 @@ export default function Dashboard() {
                     }}
                 >
                     <Stack flex={1} height="100%">
-                        <Typography fontSize={"14px"} fontWeight={700}>
+                        <Typography fontSize={"12px"} fontWeight={700}>
                             Today's Total Clocked Out
                         </Typography>
 
@@ -126,7 +126,7 @@ export default function Dashboard() {
                     </Stack>
                 </Paper>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={6} md={3}>
                 <Paper
                     elevation={0}
                     sx={{
@@ -136,7 +136,7 @@ export default function Dashboard() {
                     }}
                 >
                     <Stack flex={1} height="100%">
-                        <Typography fontSize={"14px"} fontWeight={700}>
+                        <Typography fontSize={"12px"} fontWeight={700}>
                             Today's Complete Attendance
                         </Typography>
 

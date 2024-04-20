@@ -9,7 +9,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { ClassForm } from "./ClassForm";
-import { Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { DevTool } from "@hookform/devtools";
 
 export const ClassCreate = () => {
@@ -54,10 +54,16 @@ export const ClassCreate = () => {
     return (
         <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <ClassForm />
-                <Button type="submit" variant="contained" disabled={isCreating}>
-                    Create
-                </Button>
+                <Stack p="16px" bgcolor="background.default">
+                    <ClassForm />
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={isCreating}
+                    >
+                        Create
+                    </Button>
+                </Stack>
             </form>
             <DevTool control={form.control} />
         </FormProvider>

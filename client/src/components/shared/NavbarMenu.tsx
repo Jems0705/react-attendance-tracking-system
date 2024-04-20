@@ -33,10 +33,7 @@ export const NavbarMenu = () => {
                         }}
                     >
                         {routeMenus.map((menu) => {
-                            const studentUnallowed = [
-                                "/students",
-                                "/attendance",
-                            ];
+                            const studentUnallowed = ["/students"];
                             if (
                                 authRole &&
                                 authRole === roles.STUDENT &&

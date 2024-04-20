@@ -14,6 +14,8 @@ import { Button as ShadCNButton } from "@/components/ui/button";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { AllowedRoles } from "../auth/AllowedRoles";
+import roles from "@/data/roles";
 
 export const ClassTable = () => {
     const navigate = useNavigate();
@@ -66,13 +68,17 @@ export const ClassTable = () => {
                             >
                                 View
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onClick={() =>
-                                    navigate(`/classes/${params.row._id}/edit`)
-                                }
-                            >
-                                Edit
-                            </DropdownMenuItem>
+                            <AllowedRoles roles={[roles.TEACHER]}>
+                                <DropdownMenuItem
+                                    onClick={() =>
+                                        navigate(
+                                            `/classes/${params.row._id}/edit`
+                                        )
+                                    }
+                                >
+                                    Edit
+                                </DropdownMenuItem>
+                            </AllowedRoles>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
@@ -82,16 +88,18 @@ export const ClassTable = () => {
 
     return (
         <section className="flex flex-1 flex-col gap-2">
-            <div className="flex flex-row gap-1">
-                <Button
-                    variant="contained"
-                    component={Link}
-                    to="/classes/new"
-                    endIcon={<Plus />}
-                >
-                    new
-                </Button>
-            </div>
+            <AllowedRoles roles={[roles.TEACHER]}>
+                <div className="flex flex-row gap-1">
+                    <Button
+                        variant="contained"
+                        component={Link}
+                        to="/classes/new"
+                        endIcon={<Plus />}
+                    >
+                        new
+                    </Button>
+                </div>
+            </AllowedRoles>
             <Box bgcolor="background.default" p="16px" borderRadius="8px">
                 <DataGrid
                     autoHeight

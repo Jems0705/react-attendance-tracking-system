@@ -56,6 +56,31 @@ const getClass = async (req, res, next) => {
 
             res.status(200).json(_class);
         }
+
+        if (req.userRole === roles.Student) {
+            const _class = await Class.findOne({
+                _id: classId,
+                students: user._id,
+            })
+                .select("-__v")
+                .populate([
+                    {
+                        path: "students",
+                        select: "-password -__v",
+                    },
+                    {
+                        path: "teacher",
+                        select: "-password -__v",
+                    },
+                ]);
+
+            if (!_class) {
+                res.status(404);
+                throw new Error("No class found");
+            }
+
+            res.status(200).json(_class);
+        }
     } catch (error) {
         next(error);
     }

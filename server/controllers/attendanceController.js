@@ -38,13 +38,23 @@ const getAttendance = async (req, res, next) => {
                             },
                         ]);
 
-                    console.log("attendance", attendance);
-
                     allAttendance = allAttendance.concat(attendance);
                 }
             }
 
-            console.log("allAttendance", allAttendance);
+            res.status(200).json(allAttendance);
+        }
+
+        if (req.userRole === roles.Student) {
+            const allAttendance = await Attendance.find({ student: user._id })
+                .select("-__v")
+                .populate([
+                    {
+                        path: "class",
+                        select: "_id name",
+                    },
+                ]);
+
             res.status(200).json(allAttendance);
         }
     } catch (error) {

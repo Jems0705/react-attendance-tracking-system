@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { QrCode } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Box, Button } from "@mui/material";
+import { useGetAuth } from "@/hooks/auth/useGetAuth";
+import roles from "@/data/roles";
 
 type AttendanceTableProps = {
     withScan?: boolean;
@@ -14,19 +16,25 @@ type AttendanceTableProps = {
 export const AttendanceTable: FC<AttendanceTableProps> = ({
     withScan = false,
 }) => {
+    const { data: authUser } = useGetAuth();
     const { data: attendance, isFetching } = useGetAttendance();
 
     const columns: GridColDef[] = [
-        {
-            field: "student",
-            headerName: "Student",
-            width: 300,
-            valueGetter: (_value, row) => {
-                return `${row.student?.firstName || ""} ${
-                    row.student?.lastName || ""
-                }`;
-            },
-        },
+        ...(authUser?.role !== roles.STUDENT
+            ? [
+                  {
+                      field: "student",
+                      headerName: "Student",
+                      width: 300,
+                      valueGetter: (_value, row) => {
+                          return `${row.student?.firstName || ""} ${
+                              row.student?.lastName || ""
+                          }`;
+                      },
+                  },
+              ]
+            : []),
+
         {
             field: "class",
             headerName: "Class",
@@ -62,6 +70,8 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
             },
         },
     ];
+
+    console.log("columns", columns);
 
     return (
         <section className="flex flex-1 flex-col gap-2 ">

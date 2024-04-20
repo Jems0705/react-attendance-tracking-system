@@ -160,7 +160,7 @@ const router = createBrowserRouter([
                             <Suspense fallback={<FullLoader />}>
                                 <AllowedRoles
                                     type="page"
-                                    roles={[roles.TEACHER]}
+                                    roles={[roles.TEACHER, roles.STUDENT]}
                                 >
                                     <AttendancePage />
                                 </AllowedRoles>
