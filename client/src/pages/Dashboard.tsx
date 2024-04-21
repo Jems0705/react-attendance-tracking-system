@@ -5,7 +5,7 @@ import { isToday } from "date-fns";
 import { useMemo } from "react";
 
 export default function Dashboard() {
-    const { data: attendance } = useGetAttendance();
+    const { data: attendance, isFetching } = useGetAttendance();
 
     const todaysAttendance = useMemo(() => {
         if (attendance) {
@@ -15,8 +15,6 @@ export default function Dashboard() {
         }
         return [];
     }, [attendance]);
-
-    console.log("todaysAttendance", todaysAttendance);
 
     const timelogs =
         todaysAttendance?.reduce(
@@ -33,54 +31,12 @@ export default function Dashboard() {
     const completeAttendance =
         todaysAttendance?.reduce((acc, curr) => {
             if (curr.clockIn && curr?.clockOut) {
+                console.log("att", curr);
                 return acc + 1;
             }
         }, 0) || 0;
 
     return (
-        // <Stack direction="row" gap="8px">
-        //     <Paper
-        //         elevation={2}
-        //         sx={{
-        //             width: "100px",
-        //             height: "100px",
-        //             display: "flex",
-        //             justifyContent: "center",
-        //             alignItems: "center",
-        //         }}
-        //     >
-        //         In:
-        //         {timelogs?.clockIn}
-        //     </Paper>
-        //     <Paper
-        //         elevation={2}
-        //         sx={{
-        //             width: "100px",
-        //             height: "100px",
-        //             display: "flex",
-        //             justifyContent: "center",
-        //             alignItems: "center",
-        //         }}
-        //     >
-        //         Out:
-        //         {timelogs?.clockOut}
-        //     </Paper>
-
-        //     <Paper
-        //         elevation={2}
-        //         sx={{
-        //             width: "100px",
-        //             height: "100px",
-        //             display: "flex",
-        //             justifyContent: "center",
-        //             alignItems: "center",
-        //         }}
-        //     >
-        //         Complete attendance:
-        //         {completeAttendance}
-        //     </Paper>
-        // </Stack>
-
         <Grid container columnSpacing={1} rowSpacing={1}>
             <Grid item xs={12} sm={6} md={3}>
                 <Paper

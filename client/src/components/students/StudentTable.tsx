@@ -23,17 +23,17 @@ export const StudentTable: FC = () => {
         {
             field: "name",
             headerName: "Name",
-            width: 300,
+            width: 200,
         },
         {
             field: "lrn",
             headerName: "LRN",
-            width: 300,
+            width: 200,
         },
         {
             field: "email",
             headerName: "Email",
-            width: 300,
+            width: 200,
         },
         {
             field: "actions",

@@ -1,5 +1,5 @@
 import { useGetClass } from "@/hooks/class/useGetClass";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Skeleton, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { useParams } from "react-router-dom";
 
@@ -39,16 +39,25 @@ export const ClassInfo = () => {
                     <Typography variant="caption" fontWeight={700}>
                         Class name
                     </Typography>
-                    <Typography variant="subtitle2">{_class?.name}</Typography>
+                    {isFetching ? (
+                        <Skeleton variant="text" width="100px" />
+                    ) : (
+                        <Typography variant="subtitle2">
+                            {_class?.name}
+                        </Typography>
+                    )}
                 </Stack>
 
                 <Stack gap="4px">
                     <Typography variant="caption" fontWeight={700}>
                         Assigned teacher
                     </Typography>
-                    <Typography variant="subtitle2">
-                        {`${_class?.teacher?.firstName} ${_class?.teacher?.lastName}`}
-                    </Typography>
+
+                    {isFetching ? (
+                        <Skeleton variant="text" width="100px" />
+                    ) : (
+                        <Typography variant="subtitle2">{`${_class?.teacher?.firstName} ${_class?.teacher?.lastName}`}</Typography>
+                    )}
                 </Stack>
 
                 <Stack gap="4px">

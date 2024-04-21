@@ -1,13 +1,13 @@
 import roles from "@/data/roles";
 import { useGetAuth } from "@/hooks/auth/useGetAuth";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 
 export default function Profile() {
     const qrCodeElementRef = useRef(null);
-    const { data: authUser } = useGetAuth();
+    const { data: authUser, isFetching } = useGetAuth();
 
     const [qrCodeData, setQrCodeData] = useState("");
 
@@ -53,9 +53,13 @@ export default function Profile() {
                             <Typography variant="caption" fontWeight={700}>
                                 Name
                             </Typography>
-                            <Typography variant="subtitle2">
-                                {`${authUser?.firstName} ${authUser?.lastName}`}
-                            </Typography>
+                            {isFetching ? (
+                                <Skeleton variant="text" width="100px" />
+                            ) : (
+                                <Typography variant="subtitle2">
+                                    {`${authUser?.firstName} ${authUser?.lastName}`}
+                                </Typography>
+                            )}
                         </Stack>
 
                         {authUser?.lrn && (
@@ -63,9 +67,13 @@ export default function Profile() {
                                 <Typography variant="caption" fontWeight={700}>
                                     LRN
                                 </Typography>
-                                <Typography variant="subtitle2">
-                                    {authUser?.lrn}
-                                </Typography>
+                                {isFetching ? (
+                                    <Skeleton variant="text" width="100px" />
+                                ) : (
+                                    <Typography variant="subtitle2">
+                                        {authUser?.lrn}
+                                    </Typography>
+                                )}
                             </Stack>
                         )}
 
@@ -73,9 +81,13 @@ export default function Profile() {
                             <Typography variant="caption" fontWeight={700}>
                                 Email
                             </Typography>
-                            <Typography variant="subtitle2">
-                                {authUser?.email}
-                            </Typography>
+                            {isFetching ? (
+                                <Skeleton variant="text" width="100px" />
+                            ) : (
+                                <Typography variant="subtitle2">
+                                    {authUser?.email}
+                                </Typography>
+                            )}
                         </Stack>
                     </Stack>
                 </Paper>

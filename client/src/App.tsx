@@ -13,6 +13,7 @@ import { AuthLayout } from "./components/auth/AuthLayout";
 const LoginPage = lazy(() => import("@/pages/Login"));
 const RegisterPage = lazy(() => import("@/pages/Register"));
 
+const HomePage = lazy(() => import("@/pages/Home"));
 const DashboardPage = lazy(() => import("@/pages/Dashboard"));
 const ClassesPage = lazy(() => import("@/pages/Classes"));
 const ClassPage = lazy(() => import("@/pages/Class"));
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
                         index: true,
                         element: (
                             <Suspense fallback={<FullLoader />}>
-                                <DashboardPage />
+                                <HomePage />
                             </Suspense>
                         ),
                     },

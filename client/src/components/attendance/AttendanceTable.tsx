@@ -12,19 +12,28 @@ import roles from "@/data/roles";
 type AttendanceTableProps = {
     withScan?: boolean;
     showDate?: boolean;
+    showStudent?: boolean;
     todayOnly?: boolean;
+    studentId?: string;
 };
 
 export const AttendanceTable: FC<AttendanceTableProps> = ({
     withScan = false,
     showDate = true,
+    showStudent = true,
     todayOnly = false,
+    studentId,
 }) => {
     const { data: authUser } = useGetAuth();
     const { data: attendanceData, isFetching } = useGetAttendance();
 
     const attendance = useMemo(() => {
         if (attendanceData) {
+            if (studentId) {
+                return attendanceData.filter((attendance) => {
+                    return attendance.student._id === studentId;
+                });
+            }
             if (todayOnly) {
                 return attendanceData.filter((attendance) => {
                     return isToday(attendance.createdAt);
@@ -38,7 +47,7 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
     }, [attendanceData, todayOnly]);
 
     const columns: GridColDef[] = [
-        ...(authUser?.role !== roles.STUDENT
+        ...(authUser?.role !== roles.STUDENT && showStudent
             ? [
                   {
                       field: "student",
@@ -90,7 +99,7 @@ export const AttendanceTable: FC<AttendanceTableProps> = ({
                 if (row?.clockOut) {
                     return format(row.clockOut, "h:mm:ss aaa");
                 }
-                return "No time out yet.";
+                return "No clock out yet.";
             },
             renderCell: (value) => {
                 if (!value.row?.clockOut) {
